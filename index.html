@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#16222D">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Revisión Flota">
+<title>Revisión Flota</title>
+<style>
+:root{
+  --bg:#EEF2F5; --surface:#FFFFFF; --sunk:#E4EAEF; --ink:#13202B; --muted:#56687A; --line:#D3DCE3;
+  --accent:#1F5FBF; --accent-ink:#FFFFFF; --plate:#F2B705; --plate-ink:#161B20; --band:#16222D; --band-ink:#E9EFF4;
+  --ok:#2E7D4F; --warn:#D35A0C; --bad:#C42B2B;
+  --f-display:"sans-serif-condensed","Roboto Condensed","Arial Narrow",system-ui,sans-serif;
+  --f-body:Roboto,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"Roboto Mono",ui-monospace,monospace;
+  --r:10px; color-scheme:light;
+}
+@media (prefers-color-scheme: dark){:root{
+  --bg:#0E151C; --surface:#16202A; --sunk:#1C2833; --ink:#E4ECF2; --muted:#93A4B4; --line:#283643;
+  --accent:#5B98F2; --accent-ink:#0B1420; --band:#0A1016; --band-ink:#E4ECF2; --ok:#5DBB86; --warn:#F0813D; --bad:#F0605B; color-scheme:dark}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.45}
+header{background:var(--band);color:var(--band-ink);padding:calc(env(safe-area-inset-top,0px) + 10px) 16px 10px;position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:10px}
+header h1{font-family:var(--f-display);font-weight:700;font-size:21px;margin:0;text-transform:uppercase;letter-spacing:.03em;flex:1}
+.plate{display:inline-block;font-family:var(--f-mono);font-weight:700;background:var(--plate);color:var(--plate-ink);border-radius:4px;padding:1px 9px;border:2px solid var(--plate-ink);font-variant-numeric:tabular-nums}
+.plate.lg{font-size:28px;padding:2px 14px}
+main{padding:16px 16px calc(96px + env(safe-area-inset-bottom,0px));display:grid;gap:16px;max-width:720px;margin:0 auto}
+nav.tabs{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);padding-bottom:env(safe-area-inset-bottom,0px);z-index:6}
+nav.tabs a{display:grid;place-items:center;gap:2px;padding:9px 4px 8px;color:var(--muted);text-decoration:none;font-size:12px;font-weight:600}
+nav.tabs a svg{width:24px;height:24px}
+nav.tabs a[aria-current="page"]{color:var(--accent)}
+h2{font-family:var(--f-display);font-weight:700;font-size:26px;text-transform:uppercase;margin:0;line-height:1.1}
+h3{font-family:var(--f-display);font-weight:700;font-size:18px;text-transform:uppercase;margin:0;letter-spacing:.03em}
+.eyebrow{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.muted{color:var(--muted)} .small{font-size:14px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:grid;gap:12px;min-width:0}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.between{justify-content:space-between}
+.kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px}
+.kpi b{display:block;font-family:var(--f-display);font-size:30px;line-height:1}
+.kpi span{font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);font-weight:700}
+button,.btn{font:inherit;font-weight:600;font-size:15px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:11px 16px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px}
+button.primary,.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+button.big{font-size:17px;padding:14px 18px;width:100%}
+button.ghost{background:transparent;border-color:transparent;color:var(--accent)}
+button.danger{color:var(--bad)}
+button:disabled{opacity:.5}
+label{display:grid;gap:5px;font-size:14px;font-weight:600;color:var(--muted)}
+input,select,textarea{font:inherit;font-size:16px;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:11px 12px;width:100%;min-width:0}
+textarea{min-height:70px;resize:vertical}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.photo{display:grid;place-items:center;gap:6px;border:2px dashed var(--line);border-radius:var(--r);padding:22px;background:var(--sunk);text-align:center;font-weight:700;color:var(--ink)}
+.photo.need{border-color:var(--bad)}
+.photo img{max-height:280px;max-width:100%;border-radius:8px}
+.units{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px}
+.unit{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px;display:grid;gap:6px;text-decoration:none;color:inherit}
+.dot{color:var(--warn);font-weight:700}
+.fitem{display:grid;grid-template-columns:64px 1fr;gap:10px 12px;padding:12px 0;border-top:1px solid var(--line)}
+.fitem:first-child{border-top:0}
+.fitem .body{min-width:0;display:grid;gap:3px}
+.fitem .acts{grid-column:1 / -1;display:flex;flex-wrap:wrap;gap:8px}
+.thumb{width:64px;height:64px;object-fit:cover;border-radius:8px;background:var(--sunk);border:1px solid var(--line);display:grid;place-items:center;font-size:11px;color:var(--muted)}
+.est{font-size:12px;font-weight:700;padding:2px 8px;border-radius:4px;background:var(--sunk)}
+.est-cerrado{color:var(--ok)} .est-en_proceso{color:var(--accent)} .est-abierto{color:var(--warn)}
+.chip{font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
+.banner{padding:12px 14px;border-radius:var(--r);background:color-mix(in srgb,var(--plate) 22%,var(--surface));border:1px solid color-mix(in srgb,var(--plate) 60%,var(--line))}
+.empty{padding:24px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:var(--r)}
+.toast{position:fixed;left:16px;right:16px;bottom:calc(84px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:12px 16px;border-radius:10px;font-weight:600;z-index:20;text-align:center}
+.inline{display:grid;gap:8px;padding:10px;background:var(--sunk);border-radius:8px;grid-column:1 / -1}
+details summary{font-weight:700;cursor:pointer;padding:4px 0}
+.brand-h{font-family:var(--f-display);font-weight:700;font-size:20px;text-transform:uppercase;display:flex;gap:8px;align-items:baseline}
+.brand-h span{font-family:var(--f-body);font-size:13px;font-weight:500;color:var(--muted);text-transform:none}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<header><span class="plate">BUS</span><h1>Revisión flota</h1><span id="hdr-sync" class="small"></span></header>
+<main id="app"><div class="empty">Cargando…</div></main>
+<nav class="tabs" id="nav">
+  <a href="#inicio" data-v="inicio"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg>Inicio</a>
+  <a href="#registrar" data-v="registrar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>Registrar</a>
+  <a href="#unidades" data-v="unidades"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="15" rx="2"/><path d="M4 11h16M7 21v-3M17 21v-3"/><circle cx="8" cy="14.5" r="1"/><circle cx="16" cy="14.5" r="1"/></svg>Unidades</a>
+  <a href="#archivo" data-v="archivo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12M7 10l5 5 5-5M4 19h16"/></svg>Archivo</a>
+</nav>
+<div class="toast" id="toast" hidden></div>
+<script src="app.js"></script>
+</body>
+</html>
