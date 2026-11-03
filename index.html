@@ -90,6 +90,16 @@ details summary{font-weight:700;cursor:pointer;padding:4px 0}
   <a href="#archivo" data-v="archivo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12M7 10l5 5 5-5M4 19h16"/></svg>Archivo</a>
 </nav>
 <div class="toast" id="toast" hidden></div>
+<script>
+// Diagnóstico: si algo falla al abrir, se muestra el error en pantalla en vez de quedar en blanco.
+(function(){
+  function show(msg){var m=document.getElementById("app");if(m)m.innerHTML='<div class="banner"><b>La app no pudo abrir.</b><br><span class="small">'+String(msg).replace(/[<>&]/g,"")+'</span><br><br><button onclick="reiniciarApp()">Reiniciar la app</button></div>';}
+  window.reiniciarApp=function(){var p=[];if(navigator.serviceWorker)p.push(navigator.serviceWorker.getRegistrations().then(function(r){return Promise.all(r.map(function(x){return x.unregister()}))}));if(window.caches)p.push(caches.keys().then(function(k){return Promise.all(k.map(function(x){return caches.delete(x)}))}));Promise.all(p).then(function(){location.reload()},function(){location.reload()});};
+  window.addEventListener("error",function(e){show((e.message||"Error")+(e.filename?" ("+e.filename.split("/").pop()+":"+e.lineno+")":""))});
+  window.addEventListener("unhandledrejection",function(e){show(e.reason&&e.reason.message||e.reason||"Error")});
+  setTimeout(function(){var m=document.getElementById("app");if(m&&/Cargando/.test(m.textContent))show("Tardó demasiado en abrir. iOS "+((navigator.userAgent.match(/OS (\d+_\d+)/)||[])[1]||"?"));},8000);
+})();
+</script>
 <script src="app.js"></script>
 </body>
 </html>
