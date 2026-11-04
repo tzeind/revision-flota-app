@@ -77,6 +77,12 @@ textarea{min-height:70px;resize:vertical}
 details summary{font-weight:700;cursor:pointer;padding:4px 0}
 .brand-h{font-family:var(--f-display);font-weight:700;font-size:20px;text-transform:uppercase;display:flex;gap:8px;align-items:baseline}
 .brand-h span{font-family:var(--f-body);font-size:13px;font-weight:500;color:var(--muted);text-transform:none}
+.thumb-btn{padding:0;border:0;background:none;min-height:0;border-radius:8px;width:64px;height:64px}
+.visor{position:fixed;inset:0;z-index:30;background:rgba(8,12,16,.94);display:grid;grid-template-rows:auto 1fr;gap:10px;padding:calc(12px + env(safe-area-inset-top,0px)) 16px calc(16px + env(safe-area-inset-bottom,0px))}
+.visor .bar{display:flex;align-items:center;gap:12px;color:#E9EFF4}
+.visor .bar span{flex:1;min-width:0;font-weight:600;font-size:14px}
+.visor .bar button{background:#E9EFF4;color:#13202B;border-color:#E9EFF4}
+.visor img{max-width:100%;max-height:100%;object-fit:contain;place-self:center;border-radius:8px;min-height:0}
 [hidden]{display:none!important}
 </style>
 </head>
@@ -90,6 +96,7 @@ details summary{font-weight:700;cursor:pointer;padding:4px 0}
   <a href="#archivo" data-v="archivo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12M7 10l5 5 5-5M4 19h16"/></svg>Archivo</a>
 </nav>
 <div class="toast" id="toast" hidden></div>
+<div class="visor" id="visor" hidden><div class="bar"><span id="visor-t"></span><button type="button" data-act="visor-cerrar">Cerrar</button></div><img id="visor-img" alt="Foto del hallazgo en grande"></div>
 <script>
 // Diagnóstico: si algo falla al abrir, se muestra el error en pantalla en vez de quedar en blanco.
 (function(){
